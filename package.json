@@ -1,0 +1,13 @@
+{
+  "name": "shopmind-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Secure AI-powered e-commerce platform",
+  "packageManager": "pnpm@12.23.0",
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint"
+  }
+}
