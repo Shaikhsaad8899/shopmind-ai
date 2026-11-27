@@ -1,0 +1,45 @@
+
+name: ShopMind AI - Mock CD
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+jobs:
+  mock-deployment:
+    name: Mock Deployment
+    runs-on: ubuntu-latest
+
+    env:
+      DEPLOY_ENV: ${{ inputs.environment }}
+      SERVER_HOST: mock-aws-server
+      SERVER_USER: mock-user
+      DEPLOY_PATH: /var/www/shopmind-ai
+
+    steps:
+      - name: Deployment configuration
+        run: |
+          echo "Environment: $DEPLOY_ENV"
+          echo "Server: $SERVER_HOST"
+          echo "User: $SERVER_USER"
+          echo "Path: $DEPLOY_PATH"
+
+      - name: Mock Docker build
+        run: echo "Simulating Docker build"
+
+      - name: Mock AWS connection
+        run: echo "Simulating AWS EC2 connection"
+
+      - name: Mock deployment
+        run: echo "Simulating application deployment"
+
+      - name: Mock health check
+        run: echo "Simulating application health check"
+
+      - name: Deployment summary
+        run: |
+          echo "Mock deployment completed"
+          echo "No actual deployment performed"
