@@ -1,4 +1,3 @@
-
 name: ShopMind AI - CI
 
 on:
@@ -56,11 +55,54 @@ jobs:
       - name: CI completed
         run: echo "ShopMind AI CI completed successfully"
 
+  python-ci:
+    name: Validate Python AI Service
+    runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: services/ai-service
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: services/ai-service/requirements.txt
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install Python dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Validate Python dependencies
+        run: python -m pip check
+
+      - name: Run Ruff linting
+        run: python -m ruff check .
+
+      - name: Validate Python formatting
+        run: python -m ruff format --check .
+
+      - name: Run Python automated tests
+        run: python -m pytest
+        env:
+          APP_ENV: test
+          CI: "true"
+
+      - name: Python CI completed
+        run: echo "ShopMind AI Python CI completed successfully"
 
   deploy-development:
     name: Deploy DEV (Mock)
-    needs: continuous-integration
+    needs:
+      - continuous-integration
+      - python-ci
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
     uses: ./.github/workflows/cd.yml
     with:
@@ -68,7 +110,9 @@ jobs:
 
   deploy-production:
     name: Deploy PROD (Mock)
-    needs: continuous-integration
+    needs:
+      - continuous-integration
+      - python-ci
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     uses: ./.github/workflows/cd.yml
     with:
